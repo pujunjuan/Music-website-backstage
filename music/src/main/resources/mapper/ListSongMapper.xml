@@ -1,0 +1,88 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper  namespace="com.pjj.music.dao.ListSongMapper">
+
+    <resultMap id="BaseMap" type="com.pjj.music.pojo.ListSong">
+        <id column="id" property="id" jdbcType="INTEGER"></id>
+        <result jdbcType="INTEGER" column="song_id" property="songId"></result>
+        <result jdbcType="INTEGER" column="song_list_id" property="songListId"></result>
+    </resultMap>
+    <sql id="Base_Column_Blob">
+     id,song_id,song_list_id
+    </sql>
+
+    <!--查询全部-->
+    <select id="selectListSong" parameterType="com.pjj.music.pojo.ListSong"
+            resultType="com.pjj.music.pojo.ListSong">
+        select * from list_song;
+    </select>
+    <!--id查询-->
+    <select id="selectById" resultMap="BaseMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_Blob"></include>
+        from list_song
+        where id=#{id}
+    </select>
+
+    <select id="selectBySongID" resultMap="BaseMap" parameterType="java.lang.Integer">
+        select
+        *
+        from list_song
+        where song_list_id=#{songListId}
+    </select>
+
+
+    <!--增加歌单-->
+    <insert id="add" parameterType="com.pjj.music.pojo.ListSong">
+        insert into list_song
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="songId != null">
+                song_id,
+            </if>
+            <if test="songListId != null">
+                song_list_id
+            </if>
+        </trim>
+        <trim prefix=" values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="songId != null">
+                #{songId},
+            </if>
+            <if test="songListId != null">
+                #{songListId}
+            </if>
+        </trim>
+    </insert>
+    <!--删除歌单-->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from list_song where id=#{id}
+    </delete>
+
+    <!--删除歌单-->
+    <delete id="deleteBysongIdSongListId" parameterType="java.util.HashMap">
+        delete from list_song where song_id=#{songId} and song_list_id=#{songListId}
+    </delete>
+    <!--修改歌单-->
+    <update id="update" parameterType="com.pjj.music.pojo.ListSong">
+        update list_song
+        <set>
+            <if test="id!=null">
+                id=#{id},
+            </if>
+            <if test="songId!=null">
+                song_id=#{songId},
+            </if>
+            <if test="songListId!=null">
+                song_list_id=#{songListId}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+</mapper>

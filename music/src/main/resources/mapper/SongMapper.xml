@@ -1,0 +1,145 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pjj.music.dao.SongMapper">
+
+    <resultMap id="BaseMap" type="com.pjj.music.pojo.Song">
+        <id column="id" property="id" jdbcType="INTEGER"></id>
+        <result jdbcType="VARCHAR" column="name" property="name"></result>
+        <result jdbcType="INTEGER" column="singer_id" property="singerId"></result>
+        <result jdbcType="VARCHAR" column="introduction" property="introduction"></result>
+        <result jdbcType="TIMESTAMP" column="creata_time" property="createTime"></result>
+        <result jdbcType="TIMESTAMP" column="update_time" property="updateTime"></result>
+        <result jdbcType="VARCHAR" column="pic" property="pic"></result>
+        <result jdbcType="VARCHAR" column="url" property="url"></result>
+    </resultMap>
+    <resultMap id="BaseMapWithBLOBS" type="com.pjj.music.pojo.Song" extends="BaseMap">
+        <result jdbcType="LONGVARCHAR" column="lyric" property="lyric"></result>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,name,singer_id,introduction,create_time,update_time,pic,url,lyric
+    </sql>
+    <sql id="Base_Column_Blob">
+     id,name,singer_id,introduction,create_time,update_time,pic,url,lyric
+    </sql>
+
+    <!--查询全部-->
+    <select id="selectSong" resultMap="BaseMapWithBLOBS" >
+        select * from song;
+    </select>
+    <!--id查询-->
+    <select id="selectByID" resultMap="BaseMapWithBLOBS" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_Blob"></include>
+        from song
+        where id=#{id}
+    </select>
+    <!--歌曲名模糊查询-->
+    <select id="songName" resultMap="BaseMapWithBLOBS" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_Blob"></include>
+        from song
+        where name=#{name}
+    </select>
+
+    <!--歌手IDid查询-->
+    <select id="selectBySongID" resultMap="BaseMapWithBLOBS" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_Blob"></include>
+        from song
+        where singer_id=#{singerId}
+    </select>
+
+    <select id="selectBySongListID" resultType="com.pjj.music.pojo.Song">
+        select
+        <include refid="Base_Column_Blob"></include>
+        from song
+        where id=#{songId}
+    </select>
+
+    <!--增加歌曲-->
+    <insert id="insert" parameterType="com.pjj.music.pojo.Song">
+        insert into song
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="singerId != null">
+                singer_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="introduction != null">
+                introduction,
+            </if>
+            create_time,update_time,
+            <if test="pic != null">
+                pic,
+            </if>
+            <if test="lyric != null">
+                lyric,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+        </trim>
+        <trim prefix=" values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="singerId != null">
+                #{singerId},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="introduction != null">
+                #{introduction},
+            </if>
+            now(),now(),
+            <if test="pic != null">
+                #{pic},
+            </if>
+            <if test="lyric != null">
+                #{lyric},
+            </if>
+            <if test="url != null">
+                #{url},
+            </if>
+        </trim>
+    </insert>
+    <!--删除歌手-->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from song where id=#{id}
+    </delete>
+    <!--修改歌曲-->
+    <update id="update" parameterType="com.pjj.music.pojo.Song">
+        update song
+        <set>
+            <if test="singerId!=null">
+                singer_id=#{singerId},
+            </if>
+            <if test="name!=null">
+                name=#{name},
+            </if>
+            <if test="introduction!=null">
+                introduction=#{introduction},
+            </if>
+            <if test="pic!=null">
+                pic=#{pic},
+            </if>
+            <if test="updateTime!=null">
+                update_time= now(),
+            </if>
+            <if test="lyric!=null">
+                lyric=#{lyric},
+            </if>
+            <if test="url!=null">
+                url=#{url}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+</mapper>

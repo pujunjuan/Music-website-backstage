@@ -1,0 +1,129 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pjj.music.dao.SingerMapper">
+
+    <resultMap id="BaseMap" type="com.pjj.music.pojo.Singer">
+        <id column="id" property="id" jdbcType="INTEGER"></id>
+        <result jdbcType="VARCHAR" column="name" property="name"></result>
+        <result jdbcType="TINYINT" column="sex" property="sex"></result>
+        <result jdbcType="VARCHAR" column="pic" property="pic"></result>
+        <result jdbcType="TIMESTAMP" column="birth" property="birth"></result>
+        <result jdbcType="VARCHAR" column="location" property="location"></result>
+        <result jdbcType="VARCHAR" column="introduction" property="introduction"></result>
+    </resultMap>
+
+
+    <sql id="Base_Column_list">
+        id,name,sex,pic,birth,location,introduction
+    </sql>
+    <!--查询全部歌手-->
+    <select id="selectSinger" resultType="com.pjj.music.pojo.Singer">
+        select * from singer;
+    </select>
+    <!--id查询歌手-->
+    <select id="selectByID" resultType="com.pjj.music.pojo.Singer">
+        select
+        <include refid="Base_Column_list"></include>
+        from singer
+        where id=#{id}
+    </select>
+    <!--模糊查询名字歌手-->
+    <select id="SingerName" resultType="com.pjj.music.pojo.Singer">
+        select
+        <include refid="Base_Column_list"></include>
+        from singer
+        where name like #{name}
+    </select>
+    <!--性别查询歌手-->
+    <select id="Singer" resultType="com.pjj.music.pojo.Singer">
+        select
+        <include refid="Base_Column_list"></include>
+        from singer
+        where sex=#{sex}
+    </select>
+    <!--增加歌手-->
+    <insert id="insert" parameterType="com.pjj.music.pojo.Singer">
+        insert into singer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                id,
+            </if>
+            <if test="name!=null">
+                name,
+            </if>
+            <if test="sex!=null">
+                sex,
+            </if>
+            <if test="pic!=null">
+                pic,
+            </if>
+            <if test="birth!=null">
+                birth,
+            </if>
+            <if test="location!=null">
+                location,
+            </if>
+            <if test="introduction!=null">
+                introduction
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="sex!=null">
+                #{ sex},
+            </if>
+            <if test="pic!=null">
+                #{ pic},
+            </if>
+            <if test="birth!=null">
+                #{birth},
+            </if>
+            <if test="location!=null">
+                #{location},
+            </if>
+            <if test="introduction!=null">
+                #{introduction}
+            </if>
+        </trim>
+    </insert>
+    <!--删除歌手-->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from singer where id=#{id}
+    </delete>
+    <!--修改歌手-->
+    <update id="update" parameterType="com.pjj.music.pojo.Singer">
+        update singer
+        <set>
+            <if test="id!=null">
+               id= #{id},
+            </if>
+            <if test="name!=null">
+               name= #{name},
+            </if>
+            <if test="sex!=null">
+               sex= #{ sex},
+            </if>
+            <if test="pic!=null">
+              pic=  #{ pic},
+            </if>
+            <if test="birth!=null">
+               birth= #{birth},
+            </if>
+            <if test="location!=null">
+               location= #{location},
+            </if>
+            <if test="introduction!=null">
+                introduction= #{introduction}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+</mapper>

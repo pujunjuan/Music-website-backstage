@@ -1,0 +1,107 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper  namespace="com.pjj.music.dao.SongListMapper">
+
+    <resultMap id="BaseMap" type="com.pjj.music.pojo.SongList">
+        <id column="id" property="id" jdbcType="INTEGER"></id>
+        <result jdbcType="VARCHAR" column="title" property="title"></result>
+        <result jdbcType="VARCHAR" column="pic" property="pic"></result>
+        <result jdbcType="VARCHAR" column="introduction" property="introduction"></result>
+        <result jdbcType="VARCHAR" column="style" property="style"></result>
+    </resultMap>
+    <sql id="Base_Column_Blob">
+     id,title,pic,introduction,style
+    </sql>
+
+    <!--查询全部-->
+    <select id="selectSongList" parameterType="com.pjj.music.pojo.SongList"
+            resultType="com.pjj.music.pojo.SongList">
+        select * from song_list;
+    </select>
+    <!--id查询-->
+    <select id="selectByID" resultMap="BaseMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_Blob"></include>
+        from song_list
+        where id=#{id}
+    </select>
+    <!--歌单标题模糊查询-->
+    <select id="SongListTitle" resultMap="BaseMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_Blob"></include>
+        from song_list
+        where title  like #{title}
+    </select>
+
+    <select id="SongListStyle" resultType="com.pjj.music.pojo.SongList">
+        select
+        <include refid="Base_Column_Blob"></include>
+        from song_list
+        where style=#{style}
+    </select>
+
+    <!--增加歌单-->
+    <insert id="insert" parameterType="com.pjj.music.pojo.SongList">
+        insert into song_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="pic != null">
+                pic,
+            </if>
+            <if test="introduction != null">
+                introduction,
+            </if>
+            <if test="style != null">
+                style
+            </if>
+
+        </trim>
+        <trim prefix=" values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="pic != null">
+                #{pic},
+            </if>
+            <if test="introduction != null">
+                #{introduction},
+            </if>
+            <if test="style != null">
+                #{style}
+            </if>
+        </trim>
+    </insert>
+    <!--删除歌单-->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from song_list where id=#{id}
+    </delete>
+    <!--修改歌单-->
+    <update id="update" parameterType="com.pjj.music.pojo.SongList">
+        update song_list
+        <set>
+            <if test="title!=null">
+                title=#{title},
+            </if>
+            <if test="style!=null">
+                style=#{style},
+            </if>
+            <if test="introduction!=null">
+                introduction=#{introduction},
+            </if>
+            <if test="pic!=null">
+                pic=#{pic}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+</mapper>

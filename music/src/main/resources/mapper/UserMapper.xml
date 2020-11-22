@@ -1,0 +1,166 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pjj.music.dao.UserMapper">
+
+    <resultMap id="BaseMap" type="com.pjj.music.pojo.User">
+        <id column="id" property="id" jdbcType="INTEGER"></id>
+        <result jdbcType="VARCHAR" column="username" property="username"></result>
+        <result jdbcType="VARCHAR" column="password" property="password"></result>
+        <result jdbcType="TINYINT" column="sex" property="sex"></result>
+        <result jdbcType="CHAR" column="phone" property="phoneNum"></result>
+        <result jdbcType="CHAR" column="email" property="email"></result>
+        <result jdbcType="VARCHAR" column="pic" property="avator"></result>
+        <result jdbcType="TIMESTAMP" column="birth" property="birth"></result>
+        <result jdbcType="VARCHAR" column="location" property="location"></result>
+        <result jdbcType="VARCHAR" column="introduction" property="introduction"></result>
+        <result jdbcType="TIMESTAMP" column="createTime" property="createTime"></result>
+        <result jdbcType="TIMESTAMP" column="updataTime" property="updateTime"></result>
+    </resultMap>
+
+
+    <sql id="Base_Column_list">
+        id,username,password,sex,phone,email,pic,birth,location,introduction,createTime,updataTime
+    </sql>
+    <!--查询全部用户-->
+    <select id="UserAll" resultMap="BaseMap">
+        select
+        <include refid="Base_Column_list"></include>
+         from songuser
+    </select>
+    <!--id查询用户-->
+    <select id="UserById" resultMap="BaseMap" >
+        select
+        <include refid="Base_Column_list"></include>
+        from songuser
+        where id=#{id}
+    </select>
+    <!--根据账号查询-->
+    <select id="UserName" resultMap="BaseMap">
+        select
+        <include refid="Base_Column_list"></include>
+        from songuser
+        where username=#{username}
+    </select>
+    <select id="Checkpassword"  resultType="java.lang.Integer" >
+        select
+       count(*)
+        from songuser
+        where username=#{username} and password=#{password}
+    </select>
+
+    <!--增加用户-->
+    <insert id="addUser" parameterType="com.pjj.music.pojo.User">
+        insert into songuser
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                id,
+            </if>
+            <if test="username!=null">
+                username,
+            </if>
+            <if test="password!=null">
+                password,
+            </if>
+            <if test="sex!=null">
+                sex,
+            </if>
+            <if test="phoneNum!=null">
+                phone,
+            </if>
+            <if test="email!=null">
+                email,
+            </if>
+            <if test="avator!=null">
+                pic,
+            </if>
+            <if test="birth!=null">
+                birth,
+            </if>
+            <if test="location!=null">
+                location,
+            </if>
+            <if test="introduction!=null">
+                introduction,
+            </if>
+            createTime,updataTime
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="username!=null">
+                #{username},
+            </if>
+            <if test="password!=null">
+                #{password},
+            </if>
+            <if test="sex!=null">
+                #{sex},
+            </if>
+            <if test="phoneNum!=null">
+                #{phoneNum},
+            </if>
+            <if test="email!=null">
+                #{email},
+            </if>
+            <if test="avator!=null">
+                #{avator},
+            </if>
+            <if test="birth!=null">
+                #{birth},
+            </if>
+            <if test="location!=null">
+                #{location},
+            </if>
+            <if test="introduction!=null">
+                #{introduction},
+            </if>
+            now(),now()
+        </trim>
+    </insert>
+    <!--删除用户-->
+    <delete id="deleteUser" parameterType="java.lang.Integer">
+        delete from songuser where id=#{id}
+    </delete>
+    <!--修改用户-->
+    <update id="updateUser" parameterType="com.pjj.music.pojo.User">
+        update songuser
+        <set>
+            <if test="id!=null">
+                id=#{id},
+            </if>
+            <if test="username!=null">
+                username= #{ username},
+            </if>
+            <if test="sex!=null">
+                sex=#{sex},
+            </if>
+            <if test="phoneNum!=null">
+                phone=#{phoneNum},
+            </if>
+            <if test="email!=null">
+                email= #{email},
+            </if>
+            <if test="avator!=null">
+                pic=#{avator},
+            </if>
+            <if test="birth!=null">
+                birth=#{birth},
+            </if>
+            <if test="location!=null">
+                location= #{location},
+            </if>
+            <if test="introduction!=null">
+                introduction= #{introduction},
+            </if>
+            updataTime=now()
+        </set>
+        where id=#{id}
+    </update>
+    <update id="updatePassword">
+        update songuser set password=#{password} where username=#{username}
+    </update>
+
+</mapper>
